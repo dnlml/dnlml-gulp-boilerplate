@@ -1,7 +1,7 @@
 {
   "name": "dnlml-gulp-boilerplate",
   "description": "Gulp Boilerplate, a basic boilerplate for starting an html project",
-  "author": "Dan",
+  "author": "dnlml",
   "license": "MIT",
   "repository": {
     "type": "git",
