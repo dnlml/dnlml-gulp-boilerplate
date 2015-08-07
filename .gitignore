@@ -1,4 +1,7 @@
 .sass-cache
 *.css.map
+<<<<<<< HEAD
 
 node_modules/*
+=======
+>>>>>>> 9f58001b8213413b32f77ade3ff0e11c14959f52
