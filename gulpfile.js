@@ -8,6 +8,7 @@ var minify = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 
+
 gulp.task('sass', function () {
   gulp.src('src/sass/*.scss')
     .pipe(sass().on('error', sass.logError))
@@ -38,17 +39,18 @@ gulp.task('vendors-js', function(){
 });
 
 gulp.task('imgs', function () {
-  // gulp.src('src/images/*')
-  //   .pipe(imagemin({
-  //     progressive: true,
-  //     svgoPlugins: [{removeViewBox: false}],
-  //     use: [pngquant()]
-  //   }))
-  //   .pipe(gulp.dest('assets/images'));
+  gulp.src('src/images/*.*')
+    .pipe(imagemin({
+      progressive: true,
+      svgoPlugins: [{removeViewBox: false}],
+      use: [pngquant()]
+    }))
+    .pipe(gulp.dest('assets/images'));
 });
 
 gulp.task('default', function() {
   gulp.start('sass', 'vendors-js', 'js', 'imgs');
-  gulp.watch('src/sass/*.scss', ['sass']);
+  gulp.watch('src/sass/**/*.scss', ['sass']);
   gulp.watch('src/js/*.js', ['js']);
+  gulp.watch('src/images/*.*', ['imgs']);
 });
