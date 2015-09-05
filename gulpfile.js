@@ -56,5 +56,6 @@ gulp.task('default', function() {
   gulp.start('sass', 'vendors-js', 'js', 'imgs');
   gulp.watch('src/sass/**/*.scss', ['sass']);
   gulp.watch('src/js/*.js', ['js']);
+  gulp.watch('src/js/vendors/*.js', ['vendors-js']);
   gulp.watch('src/images/*.*', ['imgs']);
 });

@@ -1,3 +1,2 @@
-console.log('ciao');
-console.log('test di ');
-console.log('imbruttimento');
+//= include vendors/jquery.js
+//= include vendors/jquery.cycle2.js
