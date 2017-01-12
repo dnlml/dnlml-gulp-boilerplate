@@ -101,20 +101,12 @@ gulp.task('clean', () => {
   Watch task
 */
 
-gulp.task('default', gulp.series(
-  'clean',
-  'styles',
-  'scripts',
-  gulp.parallel(
-    'copyHtml',
-    'copyImages',
-    'copyFonts'
-  )) ,() => {
-  gulp.watch('./src/assets/styles/**/*.scss',['styles']);
-  gulp.watch('./src/assets/scripts/**/*.js',['scripts']);
-  gulp.watch('./src/assets/fonts/*.*',['copyFonts']);
-  gulp.watch('./src/assets/images/**/*.*',['copyImages']);
-  gulp.watch('./src/*.*',['copyHtml']);
+gulp.task('default',() => {
+  gulp.watch('./src/assets/styles/**/*.scss',gulp.parallel('styles'));
+  gulp.watch('./src/assets/scripts/**/*.js',gulp.parallel('scripts'));
+  gulp.watch('./src/assets/fonts/*.*',gulp.parallel('copyFonts'));
+  gulp.watch('./src/assets/images/**/*.*',gulp.parallel('copyImages'));
+  gulp.watch('./src/*.*',gulp.parallel('copyHtml'));
 });
 
 /*
