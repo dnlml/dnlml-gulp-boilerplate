@@ -101,7 +101,17 @@ gulp.task('clean', () => {
   Watch task
 */
 
-gulp.task('default',() => {
+gulp.task('default',
+  gulp.series(
+  'clean',
+  'styles',
+  'scripts',
+    gulp.parallel(
+      'copyHtml',
+      'copyFonts',
+      'copyImages'
+    )
+  ),() => {
   gulp.watch('./src/assets/styles/**/*.scss',gulp.parallel('styles'));
   gulp.watch('./src/assets/scripts/**/*.js',gulp.parallel('scripts'));
   gulp.watch('./src/assets/fonts/*.*',gulp.parallel('copyFonts'));
