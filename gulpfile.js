@@ -9,11 +9,11 @@ const gulp = require('gulp'),
       browserify = require('browserify'),
       watchify = require('watchify'),
       assign = require('lodash.assign'),
-      gutil = require('gulp-util')
+      gutil = require('gulp-util'),
       source = require('vinyl-source-stream'),
       buffer = require('vinyl-buffer'),
-      del = require('del');
-
+      del = require('del'),
+      browserSync = require('browser-sync').create();
 
 /*
   Settings
@@ -23,6 +23,7 @@ const customOpts = {
   entries: ['./src/assets/scripts/main.js'],
   debug: true
 };
+
 const opts = assign({}, watchify.args, customOpts);
 let b = watchify(browserify(opts));
 gulp.task('scripts', bundle);
@@ -51,7 +52,8 @@ gulp.task('styles', () => {
       }))
       .pipe(minify({compatibility: 'ie11'}))
       // .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('./dist/assets/styles'));
+      .pipe(gulp.dest('./dist/assets/styles'))
+      .pipe(browserSync.stream());
 });
 
 function bundle () {
@@ -61,9 +63,9 @@ function bundle () {
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./dist/assets/scripts'));
+    .pipe(gulp.dest('./dist/assets/scripts'))
+    .pipe(browserSync.stream());
 }
-
 
 function bundleProd () {
   return bProd.bundle()
@@ -75,49 +77,67 @@ function bundleProd () {
 }
 
 /*
+  Browsersync
+*/
+
+gulp.task('browser-sync', function() {
+  browserSync.init({
+    proxy: "http://localhost:8888/dnlml-gulp-boilerplate/dist/"
+  });
+});
+
+/*
   Copy files
 */
 
 gulp.task('copyFonts', () => {
   return gulp.src('./src/assets/fonts/*.*')
-    .pipe(gulp.dest('./dist/assets/fonts'));
+    .pipe(gulp.dest('./dist/assets/fonts'))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('copyImages', () => {
   return gulp.src('./src/assets/images/*.*')
-    .pipe(gulp.dest('./dist/assets/images'));
+    .pipe(gulp.dest('./dist/assets/images'))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('copyHtml', () => {
   return gulp.src('./src/*.*')
-    .pipe(gulp.dest('./dist'));
+    .pipe(gulp.dest('./dist'))
+    .pipe(browserSync.stream());
 });
 
 gulp.task('clean', () => {
   return del(['dist/**', '!dist']);
 });
 
+gulp.task('watch', () => {
+  gulp.watch('./src/*.*', gulp.parallel('copyHtml')).on('change', browserSync.reload);
+  gulp.watch('./src/assets/styles/**/*.scss', gulp.parallel('styles')).on('change', browserSync.reload);
+  gulp.watch('./src/assets/scripts/**/*.js', gulp.parallel('scripts')).on('change', browserSync.reload);
+  gulp.watch('./src/assets/fonts/*.*', gulp.parallel('copyFonts')).on('change', browserSync.reload);
+  gulp.watch('./src/assets/images/**/*.*', gulp.parallel('copyImages')).on('change', browserSync.reload);
+});
 /*
   Watch task
 */
 
 gulp.task('default',
   gulp.series(
-  'clean',
-  'styles',
-  'scripts',
+    'clean',
+    'styles',
+    'scripts',
     gulp.parallel(
       'copyHtml',
       'copyFonts',
-      'copyImages'
+      'copyImages',
+      'watch',
+      'browser-sync'
     )
-  ),() => {
-  gulp.watch('./src/assets/styles/**/*.scss',gulp.parallel('styles'));
-  gulp.watch('./src/assets/scripts/**/*.js',gulp.parallel('scripts'));
-  gulp.watch('./src/assets/fonts/*.*',gulp.parallel('copyFonts'));
-  gulp.watch('./src/assets/images/**/*.*',gulp.parallel('copyImages'));
-  gulp.watch('./src/*.*',gulp.parallel('copyHtml'));
-});
+  ),
+  () => {}
+);
 
 /*
    Build
