@@ -52,7 +52,14 @@ body {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 1.6rem;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  background: yellow; }
+  -webkit-font-smoothing: antialiased; }
+
+body {
+  opacity: 1;
+  transition: opacity .5s;
+  font-size: 1.6rem;
+  overflow: hidden; }
+  .wf-loading body {
+    opacity: 0; }
 
 /*# sourceMappingURL=main.css.map */
