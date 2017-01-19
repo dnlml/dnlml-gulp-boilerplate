@@ -27,6 +27,7 @@ const customOpts = {
 const opts = assign({}, watchify.args, customOpts);
 let b = watchify(browserify(opts));
 gulp.task('scripts', bundle);
+gulp.task('scriptsProd', bundleProd);
 b.on('update', bundle);
 b.on('log', gutil.log);
 b.transform(babelify, babelify.configure({
@@ -39,21 +40,29 @@ bProd.transform(babelify, babelify.configure({
   presets: ["es2015"],
   comments: false
 }));
+
 /*
   Compile stuff
 */
+
 gulp.task('styles', () => {
   return gulp.src('./src/assets/styles/**/*.scss')
-      .pipe(sass().on('error', sass.logError))
-      .pipe(sourcemaps.init())
-      .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
-        cascade: false
-      }))
-      .pipe(minify({compatibility: 'ie11'}))
-      // .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest('./dist/assets/styles'))
-      .pipe(browserSync.stream());
+    .pipe(sass().on('error', sass.logError))
+    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./dist/assets/styles'))
+    .pipe(browserSync.stream());
+});
+
+gulp.task('stylesProd', () => {
+  return gulp.src('./src/assets/styles/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(minify({compatibility: 'ie11'}))
+    .pipe(gulp.dest('./dist/assets/styles'));
 });
 
 function bundle () {
@@ -82,7 +91,7 @@ function bundleProd () {
 
 gulp.task('browser-sync', function() {
   browserSync.init({
-    proxy: "http://localhost:8888/dnlml-gulp-boilerplate/dist/"
+    proxy: "http://localhost:8888/dnlml-gulp-boilerplate/dist/" // ! IMPORTANT TO CHANGE
   });
 });
 
@@ -135,19 +144,16 @@ gulp.task('default',
       'watch',
       'browser-sync'
     )
-  ),
-  () => {}
+  )
 );
 
 /*
    Build
 */
 
-gulp.task('scriptsProd', bundleProd);
-
 gulp.task('build', gulp.series(
   'clean',
-  'styles',
+  'stylesProd',
   'scriptsProd',
   gulp.parallel(
     'copyHtml',
