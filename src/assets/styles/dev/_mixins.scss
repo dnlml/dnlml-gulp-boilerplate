@@ -7,3 +7,36 @@
   width: $width;
   height: $height;
 }
+
+/*
+
+  small: 640px;
+  medium: 768px;
+  large: 1024px;
+  xlarge: 1280px;
+  xxlarge: 1440px;
+
+  Use: @include mq(small) {}
+
+*/
+
+@mixin mq($size) {
+  @if $size == small {
+    @media (min-width: 640px) { @content; }
+  }
+  @else if $size == medium {
+    @media (min-width: 768px) { @content; }
+  }
+  @else if $size == medium-l {
+    @media (min-width: 855px) { @content; }
+  }
+  @else if $size == large {
+    @media (min-width: 1024px)  { @content; }
+  }
+  @else if $size == xlarge {
+    @media (min-width: 1280px) { @content; }
+  }
+  @else if $size == xxlarge {
+    @media (min-width: 1440px)  { @content; }
+  }
+}
