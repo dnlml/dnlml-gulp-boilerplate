@@ -1,9 +1,11 @@
 body {
-  opacity: 1;
   transition: opacity .5s;
   font-size: 1.6rem;
-  overflow: hidden;
-  .wf-loading & {
+  .js & {
     opacity: 0;
+  }
+
+  .wf-active & {
+    opacity: 1;
   }
 }
