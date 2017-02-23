@@ -3,6 +3,3 @@
 *.log
 
 node_modules/*
-
-src/images/*
-assets/images/
